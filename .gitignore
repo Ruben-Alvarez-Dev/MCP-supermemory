@@ -1,0 +1,68 @@
+# ============================================================
+# MCP-SUPERSERVER - Git Ignore
+# ============================================================
+
+# Environment variables (contains secrets)
+.env
+
+# Data directories (persistent state)
+/data/
+/data/neo4j/
+/data/ollama/
+/data/obsidian/
+/logs/
+
+# Backup exports
+/exports/*.tar.gz
+/exports/LATEST_BACKUP
+
+# Docker volumes
+*.log
+
+# Node modules
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# OS
+.Thumbs.db
+.DS_Store
+
+# Logs
+logs/
+*.log
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Documentation build
+docs/_build/
