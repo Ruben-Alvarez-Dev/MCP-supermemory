@@ -30,11 +30,11 @@ router.get('/', async (req, res) => {
 
     // Check Neo4j connection
     try {
-      // TODO: Implement actual Neo4j health check when service is ready
-      health.dependencies.neo4j = {
-        status: 'pending',
-        message: 'Neo4j service not yet implemented'
-      };
+      const { checkHealth } = await import('../services/neo4j-client.js');
+      health.dependencies.neo4j = await checkHealth();
+      if (health.dependencies.neo4j.status !== 'healthy') {
+        health.status = 'degraded';
+      }
     } catch (error) {
       health.dependencies.neo4j = {
         status: 'unhealthy',

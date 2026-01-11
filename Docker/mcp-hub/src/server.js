@@ -10,6 +10,7 @@ import { setupGracefulShutdown, registerShutdownCallback } from './utils/gracefu
 import { errorHandler, notFoundHandler } from './middleware/error-handler.js';
 import { requestLogger, requestId } from './middleware/request-logger.js';
 import { httpMetricsMiddleware } from './routes/metrics.js';
+import { initializeNeo4j, closeNeo4j } from './services/neo4j-client.js';
 import healthRoutes from './routes/health.js';
 import metricsRoutes from './routes/metrics.js';
 
@@ -83,6 +84,20 @@ app.use(errorHandler);
 let server;
 
 function startServer() {
+  // Initialize Neo4j connection
+  try {
+    if (process.env.NEO4J_ENABLED !== 'false') {
+      initializeNeo4j();
+      logger.info('Neo4j initialized successfully');
+    } else {
+      logger.info('Neo4j disabled by environment variable');
+    }
+  } catch (error) {
+    logger.warn('Failed to initialize Neo4j, continuing without it', {
+      error: error.message
+    });
+  }
+
   server = app.listen(PORT, HOST, () => {
     logger.info(`MCP Hub server started`, {
       host: HOST,
@@ -115,6 +130,15 @@ function startServer() {
       });
     });
   }, 'http-server');
+
+  // Register Neo4j shutdown callback
+  registerShutdownCallback(async () => {
+    try {
+      await closeNeo4j();
+    } catch (error) {
+      logger.error('Error closing Neo4j', { error: error.message });
+    }
+  }, 'neo4j');
 
   // Handle server errors
   server.on('error', (error) => {
