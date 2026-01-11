@@ -9,6 +9,7 @@ import { logger } from './utils/logger.js';
 import { setupGracefulShutdown, registerShutdownCallback } from './utils/graceful-shutdown.js';
 import { errorHandler, notFoundHandler } from './middleware/error-handler.js';
 import { requestLogger, requestId } from './middleware/request-logger.js';
+import { protocolOmegaMiddleware } from './middleware/protocol-omega.js';
 import { httpMetricsMiddleware } from './routes/metrics.js';
 import { initializeNeo4j, closeNeo4j } from './services/neo4j-client.js';
 import { initializeOllama } from './services/ollama-router.js';
@@ -36,6 +37,9 @@ app.use(requestId);
 
 // Request logging
 app.use(requestLogger);
+
+// Protocol Omega mandatory logging
+app.use(protocolOmegaMiddleware);
 
 // Metrics collection
 app.use(httpMetricsMiddleware());
