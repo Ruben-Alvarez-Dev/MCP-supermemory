@@ -1,0 +1,247 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "name": "mcp-superserver-hub",
+  "description": "Unified MCP Hub for AI memory and reasoning with Neo4j, Ollama, and Obsidian integration",
+
+  "router": {
+    "port": 3000,
+    "host": "0.0.0.0",
+    "name": "MCP-SuperServer-Hub",
+    "debug": false
+  },
+
+  "middleware": {
+    "logging": {
+      "enabled": true,
+      "level": "info",
+      "format": "structured",
+      "destinations": [
+        {
+          "type": "obsidian",
+          "path": "/vault/AI_Logs",
+          "filename_pattern": "Log_Global_{date}.md",
+          "date_format": "%Y-%m-%d"
+        },
+        {
+          "type": "neo4j",
+          "collection": "activity_logs"
+        },
+        {
+          "type": "console",
+          "format": "json"
+        }
+      ],
+      "timestamp_format": "ISO8601",
+      "include_metadata": true,
+      "auto_context": true
+    },
+    "observability": {
+      "enabled": true,
+      "opentelemetry": true,
+      "track_tokens": true,
+      "track_performance": true,
+      "alert_on_errors": true,
+      "prometheus_port": 9090
+    },
+    "model_selection": {
+      "strategy": "automatic_with_override",
+      "respect_user_preference": true,
+      "log_all_selections": true,
+      "fallback_on_error": true
+    }
+  },
+
+  "backends": {
+    "neo4j": {
+      "enabled": true,
+      "uri": "bolt://neo4j:7687",
+      "user": "neo4j",
+      "password": "${NEO4J_PASSWORD}",
+      "database": "neo4j",
+      "collections": {
+        "entities": ["projects", "files", "classes", "bugs", "decisions", "sessions"],
+        "relationships": ["CONTAINS", "DEFINES", "FIXED_IN", "DEPENDS_ON", "RECORDED_IN", "RELATED_TO"]
+      },
+      "constraints": {
+        "no_logs": true,
+        "no_cronological": true,
+        "structured_only": true
+      },
+      "cache": {
+        "enabled": true,
+        "ttl_seconds": 300
+      }
+    },
+
+    "obsidian": {
+      "enabled": true,
+      "vault_path": "/vault",
+      "structure": {
+        "logs": "/AI_Logs/Log_Global_{date}.md",
+        "memory": "/AI_Memory/{category}/{topic}.md",
+        "projects": "/AI_Memory/Proyectos/{project_name}.md",
+        "decisions": "/AI_Memory/Decisiones/{date}_{decision_topic}.md",
+        "knowledge": "/AI_Memory/Conocimiento/{topic}.md"
+      },
+      "formats": {
+        "logs": "structured_markdown",
+        "timestamp": "ISO8601",
+        "neo4j_crossref": true,
+        "frontmatter": true
+      },
+      "auto_create_dirs": true
+    },
+
+    "ollama": {
+      "enabled": true,
+      "connection": {
+        "host": "ollama",
+        "port": 11434,
+        "timeout": 30000,
+        "retry_attempts": 3
+      },
+      "discovery": {
+        "auto_discover": true,
+        "refresh_interval": 1800,
+        "on_error": "fallback_to_default"
+      },
+      "routing": {
+        "mode": "automatic_with_override",
+        "respect_user_preference": true,
+        "log_all_selections": true
+      },
+      "model_registry": {
+        "reasoning": {
+          "models": ["qwq", "deepseek-r1", "llama3.3", "mistral"],
+          "fallback": "llama3.3",
+          "priority": "performance",
+          "description": "Complex logic and reasoning tasks"
+        },
+        "coding": {
+          "models": ["codellama", "deepseek-coder", "qwen-coder", "starcoder2"],
+          "fallback": "codellama",
+          "priority": "accuracy",
+          "description": "Code generation and modification"
+        },
+        "vision": {
+          "models": ["llava", "claude-vision", "gpt4-vision"],
+          "fallback": "llava",
+          "priority": "quality",
+          "description": "Image and visual analysis"
+        },
+        "chat": {
+          "models": ["llama3.3", "mistral", "gemma", "phi-3"],
+          "fallback": "llama3.3",
+          "priority": "speed",
+          "description": "General conversation"
+        },
+        "embeddings": {
+          "models": ["nomic-embed-text", "mxbai-embed-large"],
+          "fallback": "nomic-embed-text",
+          "priority": "quality",
+          "description": "Text embeddings for search"
+        }
+      },
+      "tools": {
+        "chat": {
+          "enabled": true,
+          "default_model": "auto",
+          "allow_override": true
+        },
+        "generate": {
+          "enabled": true,
+          "default_model": "auto",
+          "allow_override": true
+        },
+        "embeddings": {
+          "enabled": true,
+          "default_model": "nomic-embed-text",
+          "allow_override": true
+        }
+      }
+    },
+
+    "mem0": {
+      "enabled": true,
+      "neo4j_uri": "bolt://neo4j:7687",
+      "neo4j_user": "neo4j",
+      "neo4j_password": "${NEO4J_PASSWORD}",
+      "vector_store": "neo4j",
+      "memory_type": "hybrid",
+      "capabilities": ["semantic_search", "entity_extraction", "relationship_mapping"]
+    },
+
+    "neo4j_memory": {
+      "enabled": true,
+      "uri": "bolt://neo4j:7687",
+      "user": "neo4j",
+      "password": "${NEO4J_PASSWORD}",
+      "database": "neo4j"
+    },
+
+    "mem_agent": {
+      "enabled": true,
+      "obsidian_vault": "/vault",
+      "markdown_storage": true,
+      "rl_optimization": true
+    },
+
+    "sequential_thinking": {
+      "enabled": true,
+      "max_thoughts": 50,
+      "allow_revision": true,
+      "allow_branching": true
+    },
+
+    "task_master": {
+      "enabled": true,
+      "storage": "neo4j",
+      "stages": ["planning", "executing", "completed", "blocked"],
+      "auto_context": true
+    },
+
+    "software_planning": {
+      "enabled": true,
+      "template_path": "/config/templates/software_plan.md"
+    },
+
+    "conductor": {
+      "enabled": false,
+      "description": "Optional - enable only if workflow orchestration needed"
+    }
+  },
+
+  "protocol_omega": {
+    "enabled": true,
+    "enforce": true,
+    "strict_mode": true,
+    "require_logging": true,
+    "require_neo4j_update": true,
+    "log_format_validation": true,
+    "version": "2.0"
+  },
+
+  "logging": {
+    "level": "info",
+    "format": "json",
+    "outputs": ["console", "file"],
+    "file": {
+      "path": "/app/logs/mcp-hub.log",
+      "rotation": "daily",
+      "retention": 7
+    }
+  },
+
+  "health": {
+    "enabled": true,
+    "endpoint": "/health",
+    "detailed": false
+  },
+
+  "metrics": {
+    "enabled": true,
+    "port": 9090,
+    "path": "/metrics"
+  }
+}
