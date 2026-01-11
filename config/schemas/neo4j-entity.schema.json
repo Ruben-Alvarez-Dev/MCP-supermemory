@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mcp-superserver.dev/schemas/neo4j-entity.json",
+  "title": "Neo4j Entity Schema",
+  "description": "Schema for Neo4j entities in MCP-SUPERSERVER",
+  "type": "object",
+  "required": ["label", "name", "properties"],
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Node label (e.g., Project, File, Class)",
+      "enum": ["Project", "File", "Class", "Function", "Bug", "Decision", "Session", "User", "Service"]
+    },
+    "name": {
+      "type": "string",
+      "description": "Entity name"
+    },
+    "properties": {
+      "type": "object",
+      "description": "Entity properties",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "File path for File entities"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type for Class or Function entities"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "inactive", "pending", "completed", "blocked"],
+          "description": "Status for Bug or Decision entities"
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"],
+          "description": "Priority for Bug or Decision entities"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update timestamp"
+        }
+      }
+    }
+  }
+}

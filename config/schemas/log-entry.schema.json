@@ -1,0 +1,116 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mcp-superserver.dev/schemas/log-entry.json",
+  "title": "Log Entry Schema",
+  "description": "Schema for structured log entries in MCP-SUPERSERVER",
+  "type": "object",
+  "required": ["timestamp", "cli", "action_type", "context"],
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp in UTC"
+    },
+    "cli": {
+      "type": "string",
+      "enum": ["claude-code", "gemini-cli", "cline", "cursor", "opencode", "qwen-cli", "droid", "crush", "antigravity"],
+      "description": "CLI that generated the log entry"
+    },
+    "action_type": {
+      "type": "string",
+      "enum": ["PLANNING", "CODING", "DEBUGGING", "MEMORY_UPDATE", "RESEARCH", "REFACTORING", "TESTING", "DEPLOYMENT", "CONFIGURATION", "ERROR"],
+      "description": "Type of action performed"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "session": {
+          "type": "string",
+          "description": "Session identifier"
+        },
+        "user": {
+          "type": "string",
+          "description": "User identifier"
+        },
+        "project": {
+          "type": "string",
+          "description": "Project path"
+        },
+        "duration": {
+          "type": "string",
+          "description": "Duration of the action"
+        }
+      }
+    },
+    "context": {
+      "type": "string",
+      "description": "Description of what was done"
+    },
+    "changes": {
+      "type": "object",
+      "properties": {
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "type": {
+          "type": "string",
+          "enum": ["create", "modify", "delete"]
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["success", "failure", "partial"]
+        },
+        "next": {
+          "type": "string",
+          "description": "Next step"
+        },
+        "thinking_id": {
+          "type": "string",
+          "description": "Sequential thinking ID if applicable"
+        }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "properties": {
+        "output": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        }
+      }
+    },
+    "neo4j_references": {
+      "type": "object",
+      "properties": {
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "relations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
