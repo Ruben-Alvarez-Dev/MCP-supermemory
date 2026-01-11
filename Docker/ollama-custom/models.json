@@ -1,0 +1,47 @@
+{
+  "version": "1.0.0",
+  "description": "Model registry for Ollama MCP-SUPERSERVER",
+  "categories": {
+    "reasoning": {
+      "description": "Complex logic and reasoning tasks",
+      "models": ["qwq", "deepseek-r1", "llama3.3", "mistral"],
+      "fallback": "llama3.3",
+      "priority": "performance"
+    },
+    "coding": {
+      "description": "Code generation and modification",
+      "models": ["codellama", "deepseek-coder", "qwen2.5-coder", "starcoder2"],
+      "fallback": "codellama",
+      "priority": "accuracy"
+    },
+    "vision": {
+      "description": "Image and visual analysis",
+      "models": ["llava", "minicpm-v", "bakllava"],
+      "fallback": "llava",
+      "priority": "quality"
+    },
+    "chat": {
+      "description": "General conversation",
+      "models": ["llama3.3", "mistral", "gemma2", "phi-3"],
+      "fallback": "llama3.3",
+      "priority": "speed"
+    },
+    "embeddings": {
+      "description": "Text embeddings for semantic search",
+      "models": ["nomic-embed-text", "mxbai-embed-large", "all-minilm"],
+      "fallback": "nomic-embed-text",
+      "priority": "quality"
+    }
+  },
+  "models": [
+    "llama3.3",
+    "qwq",
+    "codellama",
+    "deepseek-coder",
+    "qwen2.5-coder",
+    "nomic-embed-text",
+    "mistral",
+    "gemma2",
+    "phi-3"
+  ]
+}
