@@ -1,0 +1,59 @@
+# ============================================================
+# Prometheus Configuration for MCP-SUPERSERVER
+# ============================================================
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'mcp-superserver'
+    environment: '${ENVIRONMENT:-development}'
+
+# Alerting configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+# Rule files
+rule_files: []
+
+# Scrape configurations
+scrape_configs:
+  # MCP Hub metrics
+  - job_name: 'mcp-hub'
+    static_configs:
+      - targets: ['mcp-hub:3000']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # Neo4j metrics (if exposed)
+  - job_name: 'neo4j'
+    static_configs:
+      - targets: ['neo4j:2004']
+    scrape_interval: 30s
+
+  # Ollama metrics (custom exporter)
+  - job_name: 'ollama'
+    static_configs:
+      - targets: ['ollama:11434']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  # Docker container metrics
+  - job_name: 'docker'
+    static_configs:
+      - targets: ['host.docker.internal:9323']
+    scrape_interval: 30s
+
+# Storage configuration
+storage:
+  tsdb:
+    path: /prometheus
+    retention.time: ${PROMETHEUS_RETENTION:-15d}
+    retention.size: 10GB
+
+# Web configuration
+web:
+  page_title: 'MCP-SUPERSERVER Metrics'
+  external_url: http://localhost:9090
