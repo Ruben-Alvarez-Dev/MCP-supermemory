@@ -19,28 +19,32 @@ const { combine, timestamp, printf, colorize } = format;
  * Custom format for console output
  * Formats log entries with timestamp, level, message, and metadata
  */
-const consoleFormat = printf(({ level, message, timestamp, ...metadata }) => {
+const consoleFormat = printf((info) => {
+  const { level, message, timestamp, ...rest } = info;
   let msg = `${timestamp} [${level}]: ${message}`;
 
-  if (Object.keys(metadata).length > 0) {
+  const metadataKeys = Object.keys(rest);
+  if (metadataKeys.length > 0) {
     // Filter out safe metadata (avoid circular references)
-    const safeMeta = Object.entries(metadata).reduce((acc, [key, value]) => {
-      if (key === 'timestamp' || key === 'level') return acc;
+    const safeMeta = {};
+    for (const key of metadataKeys) {
+      if (key === 'timestamp' || key === 'level') continue;
+      const value = rest[key];
       try {
-        acc[key] = typeof value === 'object' ? JSON.stringify(value) : value;
+        safeMeta[key] = typeof value === 'object' ? JSON.stringify(value) : value;
       } catch (e) {
-        acc[key] = String(value);
+        safeMeta[key] = String(value);
       }
-      return acc;
-    }, {});
+    }
 
-    if (Object.keys(safeMeta).length > 0) {
+    const safeMetaKeys = Object.keys(safeMeta);
+    if (safeMetaKeys.length > 0) {
       msg += ` ${JSON.stringify(safeMeta)}`;
     }
   }
 
   return msg;
-};
+});
 
 /**
  * Create and configure Winston logger instance
@@ -69,8 +73,9 @@ if (process.env.NODE_ENV === 'production') {
     level: 'info',
     format: combine(
       timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-      printf(({ level, message, timestamp, ...metadata }) => {
-        return `${timestamp} [${level}]: ${message} ${JSON.stringify(metadata)}`;
+      printf((info) => {
+        const { level, message, timestamp, ...rest } = info;
+        return `${timestamp} [${level}]: ${message} ${JSON.stringify(rest)}`;
       })
     )
   }));
