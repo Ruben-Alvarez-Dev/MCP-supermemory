@@ -124,45 +124,319 @@
 
 ## Sprint 2: MCP Server Implementations
 
-### Stories (TBD)
+### Stories
 
-#### US-007: Mem0 MCP Server
-**As**: AI System
-**I want**: Hybrid vector+graph memory with semantic search
-**So that**: I can find relevant information quickly
+#### US-007: Wanaku MCP Router Integration
+**As**: AI Developer
+**I want**: To integrate Wanaku as the central MCP router
+**So that**: All MCP servers are accessible through a single entry point
 
-**Acceptance Criteria**: (To be defined)
-**Priority**: P1 (Should Have)
-**Estimate**: TBD
+**Acceptance Criteria**:
+- [ ] Wanaku router configured and running
+- [ ] MCP server discovery mechanism
+- [ ] Load balancing for multiple instances
+- [ ] WebSocket support for streaming
+- [ ] Error handling for unavailable servers
+- [ ] Health checks for all MCP servers
+
+**Priority**: P0 (Must Have)
+**Estimate**: 5 story points
+**Status**: Pending
+
+---
 
 #### US-008: Neo4j Memory MCP Server
-#### US-009: Mem-Agent MCP Server
-#### US-010: Sequential Thinking MCP Server
-#### US-011: Task Master MCP Server
-#### US-012: Software Planning MCP Server
+**As**: AI System
+**I want**: To access structured graph memory through MCP
+**So that**: I can store and query entities and relationships
+
+**Acceptance Criteria**:
+- [ ] MCP server exposing Neo4j operations
+- [ ] Tools: create_entity, update_entity, delete_entity
+- [ ] Tools: create_relationship, query_graph
+- [ ] Pattern matching tools
+- [ ] Transaction support
+- [ ] Error handling and validation
+
+**Priority**: P0 (Must Have)
+**Estimate**: 4 story points
+**Status**: Pending
+
+---
+
+#### US-009: Obsidian Memory MCP Server
+**As**: AI User
+**I want**: To access Obsidian vault through MCP
+**So that**: I can read and write markdown files
+
+**Acceptance Criteria**:
+- [ ] MCP server for Obsidian operations
+- [ ] Tools: read_note, write_note, search_notes
+- [ ] Tools: list_notes, create_note, append_note
+- [ ] YAML frontmatter parsing
+- [ ] Tag-based search
+- [ ] File watching for changes
+
+**Priority**: P1 (Should Have)
+**Estimate**: 3 story points
+**Status**: Pending
+
+---
+
+#### US-010: Ollama MCP Server
+**As**: AI System
+**I want**: To access Ollama models through MCP
+**So that**: I can perform inference without direct API calls
+
+**Acceptance Criteria**:
+- [ ] MCP server wrapping Ollama API
+- [ ] Tools: chat, complete, embed
+- [ ] Tools: list_models, pull_model
+- [ ] Streaming response support
+- [ ] Model selection by task type
+- [ ] Token usage tracking
+
+**Priority**: P0 (Must Have)
+**Estimate**: 4 story points
+**Status**: Pending
+
+---
+
+#### US-011: Sequential Thinking MCP Server
+**As**: AI System
+**I want**: To perform step-by-step reasoning with visibility
+**So that**: Users can see my thought process
+
+**Acceptance Criteria**:
+- [ ] MCP server for reasoning chains
+- [ ] Tools: start_thinking, add_step, conclude
+- [ ] Chain storage in Neo4j
+- [ ] Chain export to Obsidian
+- [ ] Step-by-step visualization
+- [ ] Chain branching support
+
+**Priority**: P1 (Should Have)
+**Estimate**: 5 story points
+**Status**: Pending
+
+---
+
+#### US-012: Task Master MCP Server
+**As**: AI System
+**I want**: To manage complex tasks with subtasks
+**So that**: I can break down and track work
+
+**Acceptance Criteria**:
+- [ ] MCP server for task management
+- [ ] Tools: create_task, update_task, complete_task
+- [ ] Tools: list_tasks, add_subtask
+- [ ] Task storage in Neo4j
+- [ ] Task dependencies
+- [ ] Progress tracking
+
+**Priority**: P2 (Nice to Have)
+**Estimate**: 4 story points
+**Status**: Pending
+
+---
+
+**Sprint 2 Summary**:
+- 6 User Stories
+- 25 Story Points
+- Focus: Implementing core MCP servers
 
 ---
 
 ## Sprint 3: Testing & Quality
 
-### Stories (TBD)
+### Stories
 
 #### US-013: Unit Tests
+**As**: Developer
+**I want**: Comprehensive unit tests for all modules
+**So that**: I can catch bugs early
+
+**Acceptance Criteria**:
+- [ ] Unit tests for all services (>80% coverage)
+- [ ] Unit tests for all middleware
+- [ ] Unit tests for all routes
+- [ ] Mocked dependencies
+- [ ] Fast execution (<5 seconds)
+- [ ] CI/CD integration
+
+**Priority**: P0 (Must Have)
+**Estimate**: 5 story points
+**Status**: Pending
+
+---
+
 #### US-014: Integration Tests
+**As**: Developer
+**I want**: Tests that verify service interactions
+**So that**: I know components work together
+
+**Acceptance Criteria**:
+- [ ] Tests for Neo4j integration
+- [ ] Tests for Ollama integration
+- [ ] Tests for Obsidian integration
+- [ ] Tests for MCP protocol
+- [ ] Test database cleanup
+- [ ] Test environment isolation
+
+**Priority**: P0 (Must Have)
+**Estimate**: 4 story points
+**Status**: Pending
+
+---
+
 #### US-015: E2E Tests
+**As**: QA Engineer
+**I want**: End-to-end tests for critical workflows
+**So that**: I can verify the full system works
+
+**Acceptance Criteria**:
+- [ ] Test: Complete MCP tool call flow
+- [ ] Test: Memory storage and retrieval
+- [ ] Test: Multi-step reasoning
+- [ ] Test: Error recovery
+- [ ] Test: Graceful shutdown
+- [ ] Test: Health checks
+
+**Priority**: P0 (Must Have)
+**Estimate**: 4 story points
+**Status**: Pending
+
+---
+
 #### US-016: Performance Tests
+**As**: DevOps Engineer
+**I want**: Performance benchmarks and load tests
+**So that**: I can ensure system scalability
+
+**Acceptance Criteria**:
+- [ ] Load testing for HTTP endpoints
+- [ ] Load testing for WebSocket
+- [ ] Neo4j query performance tests
+- [ ] Ollama response time tests
+- [ ] Memory profiling
+- [ ] Performance baselines documented
+
+**Priority**: P1 (Should Have)
+**Estimate**: 3 story points
+**Status**: Pending
+
+---
+
 #### US-017: Security Tests
+**As**: Security Engineer
+**I want**: Security vulnerability scanning
+**So that**: I can identify and fix security issues
+
+**Acceptance Criteria**:
+- [ ] Dependency vulnerability scan (npm audit)
+- [ ] Static code analysis (ESLint security)
+- [ ] Input validation tests
+- [ ] Authentication/authorization tests
+- [ ] Rate limiting tests
+- [ ] Secrets detection
+
+**Priority**: P0 (Must Have)
+**Estimate**: 3 story points
+**Status**: Pending
+
+---
+
+**Sprint 3 Summary**:
+- 5 User Stories
+- 19 Story Points
+- Focus: Quality assurance and testing
 
 ---
 
 ## Sprint 4: Documentation & Deploy
 
-### Stories (TBD)
+### Stories
 
 #### US-018: Architecture Documentation
+**As**: Developer
+**I want**: Complete architecture documentation
+**So that**: New developers can understand the system
+
+**Acceptance Criteria**:
+- [ ] System architecture diagram
+- [ ] Component interaction diagrams
+- [ ] Data flow diagrams
+- [ ] Technology choices explained
+- [ ] Design patterns used
+- [ ] Scalability considerations
+
+**Priority**: P0 (Must Have)
+**Estimate**: 3 story points
+**Status**: Pending
+
+---
+
 #### US-019: API Documentation
+**As**: API Consumer
+**I want**: Complete API reference documentation
+**So that**: I can integrate with the system
+
+**Acceptance Criteria**:
+- [ ] REST API documentation (OpenAPI/Swagger)
+- [ ] MCP tool documentation
+- [ ] Request/response examples
+- [ ] Error code reference
+- [ ] Authentication documentation
+- [ ] WebSocket protocol docs
+
+**Priority**: P0 (Must Have)
+**Estimate**: 3 story points
+**Status**: Pending
+
+---
+
 #### US-020: Deployment Guides
+**As**: DevOps Engineer
+**I want**: Step-by-step deployment instructions
+**So that**: I can deploy the system to production
+
+**Acceptance Criteria**:
+- [ ] Local development setup guide
+- [ ] Docker deployment guide
+- [ ] Kubernetes deployment manifests
+- [ ] Environment configuration guide
+- [ ] Troubleshooting section
+- [ ] Update/upgrade procedures
+
+**Priority**: P0 (Must Have)
+**Estimate**: 3 story points
+**Status**: Pending
+
+---
+
 #### US-021: Monitoring Setup
+**As**: DevOps Engineer
+**I want**: Production monitoring and alerting
+**So that**: I can respond to issues quickly
+
+**Acceptance Criteria**:
+- [ ] Prometheus scrape configs
+- [ ] Grafana dashboards
+- [ ] Alert rules configuration
+- [ ] Log aggregation setup
+- [ ] Health check endpoints
+- [ ] Runbook documentation
+
+**Priority**: P1 (Should Have)
+**Estimate**: 3 story points
+**Status**: Pending
+
+---
+
+**Sprint 4 Summary**:
+- 4 User Stories
+- 12 Story Points
+- Focus: Documentation and production readiness
 
 ---
 
@@ -182,10 +456,22 @@ A story is "Done" when:
 
 ## Sprint Progress
 
-**Current Sprint**: Sprint 1
-**Sprint Goal**: Get basic MCP Hub running with health checks
+**Current Sprint**: Sprint 2
+**Sprint Goal**: Implement core MCP servers for memory, inference, and reasoning
 **Team Size**: 1 (Claude Code AI Assistant)
-**Velocity**: TBD after first sprint
+**Velocity**: 22 points/sprint (based on Sprint 1)
+
+### Overall Project Progress
+
+| Sprint | Status | Stories | Points | Focus |
+|--------|--------|---------|--------|-------|
+| Sprint 1 | ✅ Complete | 6/6 | 22/22 | Core Infrastructure |
+| Sprint 2 | 🔄 Up Next | 0/6 | 0/25 | MCP Server Implementations |
+| Sprint 3 | ⏳ Planned | 0/5 | 0/19 | Testing & Quality |
+| Sprint 4 | ⏳ Planned | 0/4 | 0/12 | Documentation & Deploy |
+| **Total** | | **6/21** | **22/78** | **28% Complete** |
+
+### Sprint 1 Status: ✅ COMPLETE
 
 **Stories Completed**: 6/6
 **Story Points Completed**: 22/22
@@ -196,7 +482,11 @@ Completed: 22 points (100%)
 Remaining: 0 points
 ```
 
-**Sprint 1 Status**: COMPLETE
+### Sprint 2 Status: 🔄 READY TO START
+
+**Stories**: 6
+**Story Points**: 25
+**Estimated Duration**: ~1 week (based on Sprint 1 velocity)
 
 ---
 
