@@ -45,12 +45,11 @@ router.get('/', async (req, res) => {
 
     // Check Ollama connection
     try {
-      const ollamaUrl = `${process.env.OLLAMA_HOST || 'localhost'}:${process.env.OLLAMA_PORT || 11434}`;
-      // TODO: Implement actual health check
-      health.dependencies.ollama = {
-        status: 'pending',
-        message: 'Ollama service not yet implemented'
-      };
+      const { checkHealth: checkOllamaHealth } = await import('../services/ollama-router.js');
+      health.dependencies.ollama = await checkOllamaHealth();
+      if (health.dependencies.ollama.status !== 'healthy') {
+        health.status = 'degraded';
+      }
     } catch (error) {
       health.dependencies.ollama = {
         status: 'unhealthy',

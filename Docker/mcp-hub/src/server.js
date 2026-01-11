@@ -11,6 +11,7 @@ import { errorHandler, notFoundHandler } from './middleware/error-handler.js';
 import { requestLogger, requestId } from './middleware/request-logger.js';
 import { httpMetricsMiddleware } from './routes/metrics.js';
 import { initializeNeo4j, closeNeo4j } from './services/neo4j-client.js';
+import { initializeOllama } from './services/ollama-router.js';
 import healthRoutes from './routes/health.js';
 import metricsRoutes from './routes/metrics.js';
 
@@ -94,6 +95,23 @@ function startServer() {
     }
   } catch (error) {
     logger.warn('Failed to initialize Neo4j, continuing without it', {
+      error: error.message
+    });
+  }
+
+  // Initialize Ollama router
+  try {
+    if (process.env.OLLAMA_ENABLED !== 'false') {
+      initializeOllama().catch(err => {
+        logger.warn('Failed to initialize Ollama, will retry later', {
+          error: err.message
+        });
+      });
+    } else {
+      logger.info('Ollama disabled by environment variable');
+    }
+  } catch (error) {
+    logger.warn('Failed to initialize Ollama, continuing without it', {
       error: error.message
     });
   }
