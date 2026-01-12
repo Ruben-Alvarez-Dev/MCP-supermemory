@@ -186,10 +186,19 @@ const handlers = {
   async create_entity({ label, name, properties = {} }) {
     const session = getSession();
     try {
+      // Build properties object
+      const allProps = {
+        name,
+        ...properties,
+        createdAt: new Date().toISOString()
+      };
+
+      // Create node with all properties
       const result = await session.run(
-        `CREATE (e:${label} {name: $name, ...$props})
+        `CREATE (e:${label})
+         SET e = $props
          RETURN e, elementId(e) as id`,
-        { name, props: { ...properties, createdAt: new Date().toISOString() } }
+        { props: allProps }
       );
 
       const record = result.records[0];
@@ -213,11 +222,16 @@ const handlers = {
   async update_entity({ id, properties }) {
     const session = getSession();
     try {
+      const allProps = {
+        ...properties,
+        updatedAt: new Date().toISOString()
+      };
+
       const result = await session.run(
         `MATCH (e) WHERE elementId(e) = $id
          SET e += $props
          RETURN e`,
-        { id, props: { ...properties, updatedAt: new Date().toISOString() } }
+        { id, props: allProps }
       );
 
       if (result.records.length === 0) {
@@ -337,8 +351,11 @@ const handlers = {
   async find_entities({ label, name_contains, limit = 50 }) {
     const session = getSession();
     try {
+      // Convertir limit a entero de forma segura
+      const limitNum = Math.floor(Number(String(limit))) || 50;
+
       let query = `MATCH (e${label ? ':' + label : ''}`;
-      const params = { limit };
+      const params = {};
 
       if (name_contains) {
         query += `) WHERE e.name CONTAINS $name_contains`;
@@ -347,7 +364,8 @@ const handlers = {
         query += ')';
       }
 
-      query += ` RETURN e LIMIT $limit`;
+      // Usar el límite directamente en la query para evitar problemas de tipos
+      query += ` RETURN e LIMIT ${limitNum}`;
 
       const result = await session.run(query, params);
 

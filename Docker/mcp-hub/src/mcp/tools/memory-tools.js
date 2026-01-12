@@ -4,8 +4,8 @@
 // High-level memory operations combining Neo4j and Obsidian
 
 import { logger } from '../../utils/logger.js';
-import * as neo4jHandlers from './neo4j-tools.js';
-import * as obsidianHandlers from './obsidian-tools.js';
+import neo4jHandlers from './neo4j-tools.js';
+import obsidianHandlers from './obsidian-tools.js';
 
 // ============================================================
 // Memory Tools for MCP

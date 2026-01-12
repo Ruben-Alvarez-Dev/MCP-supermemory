@@ -15,6 +15,8 @@ import {
   GetPromptRequestSchema
 } from '@modelcontextprotocol/sdk/types.js';
 import { logger } from '../utils/logger.js';
+import { initializeNeo4j, closeNeo4j } from '../services/neo4j-client.js';
+import { initializeOllama } from '../services/ollama-router.js';
 import { neo4jTools } from './tools/neo4j-tools.js';
 import { obsidianTools } from './tools/obsidian-tools.js';
 import { ollamaTools } from './tools/ollama-tools.js';
@@ -228,6 +230,37 @@ server.setRequestHandler(GetPromptRequestSchema, async (request) => {
 async function main() {
   logger.info('MCP-SUPERSERVER: Starting MCP server over stdio...');
 
+  // Initialize Neo4j connection
+  try {
+    if (process.env.NEO4J_ENABLED !== 'false') {
+      initializeNeo4j();
+      logger.info('Neo4j initialized successfully');
+    } else {
+      logger.info('Neo4j disabled by environment variable');
+    }
+  } catch (error) {
+    logger.warn('Failed to initialize Neo4j, continuing without it', {
+      error: error.message
+    });
+  }
+
+  // Initialize Ollama router
+  try {
+    if (process.env.OLLAMA_ENABLED !== 'false') {
+      initializeOllama().catch(err => {
+        logger.warn('Failed to initialize Ollama, will retry later', {
+          error: err.message
+        });
+      });
+    } else {
+      logger.info('Ollama disabled by environment variable');
+    }
+  } catch (error) {
+    logger.warn('Failed to initialize Ollama, continuing without it', {
+      error: error.message
+    });
+  }
+
   const transport = new StdioServerTransport();
   await server.connect(transport);
 
@@ -244,12 +277,14 @@ async function main() {
 process.on('SIGINT', async () => {
   logger.info('MCP-SUPERSERVER: Received SIGINT, shutting down...');
   await server.close();
+  await closeNeo4j();
   process.exit(0);
 });
 
 process.on('SIGTERM', async () => {
   logger.info('MCP-SUPERSERVER: Received SIGTERM, shutting down...');
   await server.close();
+  await closeNeo4j();
   process.exit(0);
 });
 
