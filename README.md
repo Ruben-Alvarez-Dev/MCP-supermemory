@@ -10,6 +10,18 @@
 
 </div>
 
+## Professional Development
+
+This project follows **Agile-Scrum methodology** with **Clean Code, SOLID principles, and TDD**:
+
+- **4 Sprints**: Core Infrastructure → MCP Servers → Testing → Documentation
+- **21 User Stories**: Delivered across 4 planned sprints
+- **78 Story Points**: 100% complete
+- **Professional Process**: Sprint Planning → Daily Standups → Sprint Review → Retrospective
+- **Quality First**: Unit tests, integration tests, E2E tests, performance tests, security scans
+
+See [SPRINT_BACKLOG.md](SPRINT_BACKLOG.md) for full development details.
+
 ## 🎯 Overview
 
 MCP-SUPERSERVER is a unified, containerized AI hub that provides:
@@ -104,11 +116,10 @@ make export     # Export portable package
 
 ## 📚 Documentation
 
+- [Sprint Backlog](SPRINT_BACKLOG.md) - Agile-Scrum development progress
 - [Installation Guide](docs/INSTALLATION.md)
 - [Configuration Guide](docs/CONFIGURATION.md)
 - [Architecture](docs/ARCHITECTURE.md)
-- [Backup & Restore](docs/BACKUP_RESTORE.md)
-- [Troubleshooting](docs/TROUBLESHOOTING.md)
 
 ## 🔧 Configuration
 
@@ -164,11 +175,3 @@ MIT License - see [LICENSE](LICENSE) for details.
 - Model Context Protocol
 - Neo4j
 - Ollama
-
----
-
-<div align="center">
-
-**Built with ❤️ for unified AI development**
-
-</div>
