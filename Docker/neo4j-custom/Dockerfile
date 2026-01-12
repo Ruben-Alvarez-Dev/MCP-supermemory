@@ -8,10 +8,13 @@ FROM neo4j:5.15.0-community
 LABEL maintainer="MCP-SUPERSERVER"
 LABEL description="Neo4j graph database for structured AI memory"
 
-# Install APOC plugin
-RUN curl -L https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/5.15.0/apoc-5.15.0-all.jar \
+# Install required packages and APOC plugin
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl ca-certificates && \
+    curl -L https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/5.15.0/apoc-5.15.0-all.jar \
     -o /var/lib/neo4j/plugins/apoc-5.15.0-all.jar && \
-    chmod 644 /var/lib/neo4j/plugins/apoc-5.15.0-all.jar
+    chmod 644 /var/lib/neo4j/plugins/apoc-5.15.0-all.jar && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy custom configuration
 COPY conf/neo4j.conf /var/lib/neo4j/conf/neo4j.conf

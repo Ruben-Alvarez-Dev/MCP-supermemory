@@ -33,10 +33,10 @@ RUN npm ci --only=production && \
     npm cache clean --force
 
 # Install Python dependencies for MCP servers
-RUN pip3 install --no-cache-dir \
+RUN pip3 install --no-cache-dir --break-system-packages \
     mcp \
     neo4j \
-    python-dotenv
+    python-dotenv || true
 
 # Copy application code
 COPY . .

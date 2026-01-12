@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "start": "node src/index.js",
+    "start:mcp": "node src/mcp-server.js",
     "dev": "node --watch src/index.js",
+    "dev:mcp": "node --watch src/mcp-server.js",
     "test": "node --test test/**/*.test.js",
     "lint": "eslint src/",
     "format": "prettier --write src/"

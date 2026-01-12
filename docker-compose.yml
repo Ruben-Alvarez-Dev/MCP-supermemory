@@ -54,34 +54,29 @@ services:
   # ============================================================
   # OLLAMA - Local LLM Inference (Model Mesh)
   # ============================================================
-  ollama:
-    build:
-      context: ./Docker/ollama-custom
-      dockerfile: Dockerfile
-    image: mcp-superserver/ollama:latest
-    container_name: mcp-ollama
-    ports:
-      - "${OLLAMA_PORT:-11434}:11434"
-    environment:
-      - OLLAMA_MODELS=${OLLAMA_MODELS:-llama3.3,qwq,codellama}
-    volumes:
-      - ./data/ollama/models:/root/.ollama/models
-    networks:
-      - mcp-network
-    restart: unless-stopped
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: ${OLLAMA_GPU_DRIVER:-nvidia}
-              count: 1
-              capabilities: [gpu]
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
+  # NOTE: Ollama service disabled - using external Ollama on host
+  # To enable Docker Ollama, uncomment this section and stop local Ollama
+  # ollama:
+  #   build:
+  #     context: ./Docker/ollama-custom
+  #     dockerfile: Dockerfile
+  #   image: mcp-superserver/ollama:latest
+  #   container_name: mcp-ollama
+  #   ports:
+  #     - "${OLLAMA_PORT:-11434}:11434"
+  #   environment:
+  #     - OLLAMA_MODELS=${OLLAMA_MODELS:-llama3.3,qwq,codellama}
+  #   volumes:
+  #     - ./data/ollama/models:/root/.ollama/models
+  #   networks:
+  #     - mcp-network
+  #   restart: unless-stopped
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #     start_period: 60s
 
   # ============================================================
   # OBSIDIAN VAULT - Logs & Documentation (Volume Mount)
@@ -118,8 +113,8 @@ services:
       - NEO4J_USER=neo4j
       - NEO4J_PASSWORD=${NEO4J_PASSWORD:-change_me_in_production}
 
-      # Ollama Connection
-      - OLLAMA_HOST=ollama
+      # Ollama Connection (using external Ollama on host)
+      - OLLAMA_HOST=host.docker.internal
       - OLLAMA_PORT=11434
       - OLLAMA_MODELS=${OLLAMA_MODELS:-llama3.3,qwq,codellama}
 
@@ -145,10 +140,10 @@ services:
       - ./logs:/app/logs
     networks:
       - mcp-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       neo4j:
-        condition: service_healthy
-      ollama:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
