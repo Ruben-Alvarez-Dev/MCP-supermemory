@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "mcp-superserver": {
+      "command": "docker",
+      "args": [
+        "exec",
+        "-i",
+        "mcp-hub",
+        "node",
+        "src/mcp-server.js"
+      ],
+      "env": {
+        "NEO4J_URI": "bolt://neo4j:7687",
+        "NEO4J_USER": "neo4j",
+        "NEO4J_PASSWORD": "change_me_in_production",
+        "OLLAMA_HOST": "host.docker.internal",
+        "OLLAMA_PORT": "11434",
+        "OBSIDIAN_VAULT": "/vault"
+      }
+    }
+  }
+}
